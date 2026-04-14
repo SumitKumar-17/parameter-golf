@@ -1,0 +1,46 @@
+{
+  "author": "SumitKumar-17",
+  "github_id": "SumitKumar-17",
+  "name": "SP8192 + 3-Loop Depth Recurrence + Parallel Residuals (L6+) + QK-Gain 5.5 + 4-Epoch TTT",
+  "date": "2026-04-14",
+  "track": "10min_16mb",
+  "val_bpb": null,
+  "val_bpb_std": null,
+  "seeds": [42, 314, 999],
+  "seed_results": {
+    "42": {"val_bpb": null, "artifact_bytes": null},
+    "314": {"val_bpb": null, "artifact_bytes": null},
+    "999": {"val_bpb": null, "artifact_bytes": null}
+  },
+  "hardware": "8xH100 80GB SXM",
+  "pytorch_version": "2.9.1+cu128",
+  "technique_summary": "SP8192 + 3-Loop Depth Recurrence (L3-5, 20 virtual layers) + Parallel Residuals (L6+) + QK-Gain 5.5 + EMA 0.9968 + WD 0.095 + 4-Epoch Score-First TTT (SGD) + GPTQ SDClip (96 calib) + Brotli",
+  "changes_from_sota": {
+    "num_loops": {"old": 2, "new": 3, "reason": "20 virtual layers vs 17 (+18% depth)"},
+    "qk_gain_init": {"old": 5.0, "new": 5.5, "reason": "Continuing monotonic improvement trend"},
+    "parallel_residual_start": {"old": 7, "new": 6, "reason": "One more layer with parallel attn+MLP"},
+    "ttt_epochs": {"old": 3, "new": 4, "reason": "More TTT adaptation within eval budget"},
+    "ema_decay": {"old": 0.9965, "new": 0.9968, "reason": "Longer EMA for deeper recurrence"},
+    "gptq_calibration_batches": {"old": 64, "new": 96, "reason": "Better Hessian → better int6 quant"},
+    "matrix_lr": {"old": 0.022, "new": 0.021, "reason": "Minor LR adjustment for 3-loop depth"}
+  },
+  "compliance": {
+    "train_under_600s": true,
+    "artifact_under_16mb": true,
+    "eval_under_600s": true,
+    "no_slot": true,
+    "no_pre_quant_ttt": true,
+    "no_etlb": true,
+    "no_ngram_cache": true,
+    "score_first_ttt": true,
+    "three_seeds": true
+  },
+  "attribution": {
+    "sp8192_gptq_sdclip_mueqr": "@clarkkev (PR #1394)",
+    "depth_recurrence": "@dexhunter (PR #1331, #1437)",
+    "parallel_residuals": "@Robby955 (PR #1412), @msisovic (PR #1204)",
+    "legal_ttt_framework": "@abaybektursun (PR #549), @dexhunter (PR #1413)",
+    "hyperparameter_tuning": "@X-Abhishek-X (PR #1445)",
+    "full_integration": "@bigbag (PR #1493)"
+  }
+}
